@@ -1,4 +1,4 @@
-package pl.aticode.dal;
+package pl.aticode.dal.mongo;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

@@ -1,6 +1,7 @@
 package pl.aticode.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -10,8 +11,10 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
-import pl.aticode.dal.MessageRepository;
-import pl.aticode.dal.UserRepository;
+import pl.aticode.dal.mongo.MessageRepository;
+import pl.aticode.dal.mongo.UserStorageRepository;
+import pl.aticode.dal.postgres.EmployeeRepository;
+import pl.aticode.entity.Employee;
 import pl.aticode.storage.MessageStorage;
 import pl.aticode.storage.UserStorage;
 
@@ -19,14 +22,16 @@ import pl.aticode.storage.UserStorage;
 public class UserService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserStorageRepository userRepository;
 	@Autowired
 	private MessageRepository messageRepository;
+	@Autowired
+	private EmployeeRepository employeeRepository;
 
 	@PostConstruct
 	public void addUser() throws Exception {
-		userRepository.save(new UserStorage("1", "employee1@gmail.com", "password", LocalDateTime.now()));
-		userRepository.save(new UserStorage("2", "employee2@gmail.com", "password", LocalDateTime.now()));
+		userRepository.save(new UserStorage("1", "customer1@gmail.com", "password", LocalDateTime.now()));
+		userRepository.save(new UserStorage("2", "customer2@gmail.com", "password", LocalDateTime.now()));
 		List<UserStorage> findAllUsers = userRepository.findAll();
 		for (UserStorage userStorage : findAllUsers) {
 			System.out.println(userStorage.toString());
@@ -40,7 +45,16 @@ public class UserService {
 		for (MessageStorage messageStorage : findAllMessages) {
 			System.out.println(messageStorage.toString());
 		}
-
+		
+		Iterable<Employee> findAllEmployee = employeeRepository.findAll();
+	    List<Employee> employeeList = new ArrayList<>();
+	    findAllEmployee.forEach(employeeList::add);
+	    for (Employee employee : employeeList) {
+			System.out.println("EMPLOYEE: "+employee.getUser().getFirstName()+" "+employee.getUser().getLastName()+" "+employee.getUser().getUsername());
+		}
+	    
+	    Employee findByUserUsername = employeeRepository.findByUserUsername("admin1");
+	    System.out.println(findByUserUsername.getUser().getLastName());
 	}
 
 //	public boolean findUser(String username) {
@@ -66,7 +80,7 @@ public class UserService {
 //	}
 	
 	public boolean findUser(String username) {
-		return userRepository.isBooksAvailableByWriter(username);
+		return userRepository.isUserExist(username);
 	}
 	
 	public void saveUser(UserStorage userStorage) throws Exception {

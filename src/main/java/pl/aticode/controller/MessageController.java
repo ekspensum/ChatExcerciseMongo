@@ -24,20 +24,20 @@ public class MessageController {
     @Autowired
     private UserService userService;
 
-    @MessageMapping("/chat/{to}")
-    public void sendMessage(@DestinationVariable String to, MessageModel message) {
+    @MessageMapping("/chat/{username}")
+    public void sendMessage(@DestinationVariable String username, MessageModel message) {
     	
-    	boolean isExists = userService.findUser(to);
+    	boolean isExists = userService.findUser(username);
 //        boolean isExists = UserStorage.getInstance().getUsers().contains(to);
         if (isExists) {
             try {
-            	simpMessagingTemplate.convertAndSend("/topic/messages/" + to, message);
-				messageService.saveMessage(new MessageStorage(null, to, message.getMessage(), LocalDateTime.now()));
+            	simpMessagingTemplate.convertAndSend("/topic/messages/" + username, message);
+				messageService.saveMessage(new MessageStorage(null, username, message.getMessage(), LocalDateTime.now()));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-            System.out.println("handling send message: " + message + " to: " + to);
+            System.out.println("handling send message: " + message + " to: " + username);
         }
     }
 }

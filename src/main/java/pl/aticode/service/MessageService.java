@@ -3,7 +3,7 @@ package pl.aticode.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import pl.aticode.dal.MessageRepository;
+import pl.aticode.dal.mongo.MessageRepository;
 import pl.aticode.storage.MessageStorage;
 
 @Service
