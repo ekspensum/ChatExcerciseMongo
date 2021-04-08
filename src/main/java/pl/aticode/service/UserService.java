@@ -6,9 +6,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import pl.aticode.dal.mongo.MessageRepository;
@@ -21,12 +18,16 @@ import pl.aticode.storage.UserStorage;
 @Service
 public class UserService {
 
-	@Autowired
-	private UserStorageRepository userRepository;
-	@Autowired
-	private MessageRepository messageRepository;
-	@Autowired
-	private EmployeeRepository employeeRepository;
+	private final UserStorageRepository userRepository;
+	private final MessageRepository messageRepository;
+	private final EmployeeRepository employeeRepository;
+	
+
+	public UserService(UserStorageRepository userRepository, MessageRepository messageRepository, EmployeeRepository employeeRepository) {
+		this.userRepository = userRepository;
+		this.messageRepository = messageRepository;
+		this.employeeRepository = employeeRepository;
+	}
 
 	@PostConstruct
 	public void addUser() throws Exception {
@@ -85,5 +86,9 @@ public class UserService {
 	
 	public void saveUser(UserStorage userStorage) throws Exception {
 		userRepository.insert(userStorage);
+	}
+	
+	public List<UserStorage> fetchAllUsers() {
+		return userRepository.findAll();
 	}
 }

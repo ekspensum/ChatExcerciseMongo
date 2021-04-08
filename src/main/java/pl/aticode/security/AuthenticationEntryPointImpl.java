@@ -1,4 +1,4 @@
-package pl.aticode.configuration;
+package pl.aticode.security;
 
 import java.io.IOException;
 
